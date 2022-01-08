@@ -7,33 +7,53 @@ public class PlayerConroller : MonoBehaviour
     private CharacterController characterController;
     private Animator myAnimator;
     private bool isWalk;
+    private Vector3  direction;
 
     [Header("Config Player")]
     public float Velocidade = 3f;
 
-    private float timeChangeDirection = 15;
-    private float timeCurrent = 0;
-    private Vector3  direction;
+    [Header("Config Attack")]
+    public ParticleSystem fxAttack;
+    public Transform HitBox;
+    [Range(0.2f, 1)]
+    public float HitRange = 0.5f;
+    public LayerMask HitLayer;
 
-    void Start()
+    [SerializeField]
+    private bool isAttack;
+
+
+    public void Start()
     {
         characterController = GetComponent<CharacterController>();
         myAnimator = GetComponent<Animator>();
     }
 
-    void Update()
+    public void Update()
     {
         ApplyMovement();
         Attack();
     }
 
-    void Attack(){
-        if(Input.GetButtonDown("Fire1")){
+    public void isDoneAttack(){
+        isAttack = false;
+    }
+
+    private void Attack(){
+        if(Input.GetButtonDown("Fire1") && !isAttack){
+            isAttack = true;
             myAnimator.SetTrigger("TriggerAttack");
+            fxAttack.Emit(1);
+
+            Collider[] colliders = Physics.OverlapSphere(HitBox.position, HitRange, HitLayer);
+            foreach(Collider c in colliders){
+                Debug.Log(c.gameObject.name);
+                c.gameObject.SendMessage("GetHit", 1);
+            }
         }
     }
 
-    void ApplyMovement()
+    private void ApplyMovement()
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
@@ -50,5 +70,10 @@ public class PlayerConroller : MonoBehaviour
 
         myAnimator.SetBool("isWalk", isWalk);
         characterController.Move(direction * Velocidade * Time.deltaTime);
+    }
+
+    public void OnDrawGizmosSelected(){
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(HitBox.position, HitRange);
     }
 }
