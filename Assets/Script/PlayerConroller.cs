@@ -47,7 +47,6 @@ public class PlayerConroller : MonoBehaviour
 
             Collider[] colliders = Physics.OverlapSphere(HitBox.position, HitRange, HitLayer);
             foreach(Collider c in colliders){
-                Debug.Log(c.gameObject.name);
                 c.gameObject.SendMessage("GetHit", 1);
             }
         }

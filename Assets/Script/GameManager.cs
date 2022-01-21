@@ -9,17 +9,11 @@ public enum EnemyState
 
 public class GameManager : MonoBehaviour
 {
+    public Transform player;
+    public float slimeDistanceToAttack = 2.3f;
+
     [Header("SlimeAI")]
+    public float idleWatingTime = 3f;
+    public float alertWatingTime = 2f;
     public Transform[] slimeWayPoints;
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-
-    
 }
