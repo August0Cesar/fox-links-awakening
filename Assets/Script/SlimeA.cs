@@ -130,7 +130,7 @@ public class SlimeA : MonoBehaviour
 
         enemyState = newState;
 
-        // isAlert = false;
+        isAlert = false;
         // Debug.Log("my current state" + enemyState);
         
         switch (enemyState)
